@@ -1,0 +1,25 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "userId": 1,
+      "username": "Alieu",
+      "title": "My first post",
+      "content": "Hello world from Alieu!"
+    },
+    {
+      "id": "2",
+      "userId": 2,
+      "username": "Bucar",
+      "title": "My story",
+      "content": "I have something to share..."
+    },
+    {
+      "id": "467c",
+      "userId": 3,
+      "username": "User",
+      "title": "Bogus",
+      "content": "Hello this is my bogus story"
+    }
+  ]
+}

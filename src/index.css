@@ -1,0 +1,11 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+h1 {
+  font-size: clamp(2em, 2vw + 1em, 5em);
+  margin-top: 1em;
+  line-height: 1.1;
+}
