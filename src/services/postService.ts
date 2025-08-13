@@ -27,3 +27,13 @@ export const createPost = async (newPost: Post) => {
   const res = await axios.post(API_URL, newPost);
   return res.data;
 };
+
+export const updatePost = async (updatedPost: Post) => {
+  if (!updatedPost.id) throw new Error("Post ID is required for update");
+  const res = await axios.put<Post>(`${API_URL}/${updatedPost.id}`, updatedPost);
+  return res.data;
+};
+
+export const deletePost = async (id: number) => {
+  await axios.delete(`${API_URL}/${id}`);
+};
