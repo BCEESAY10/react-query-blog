@@ -4,6 +4,7 @@ import PostForm from "./components/postForm";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createPost, updatePost, type Post } from "./services/postService";
 import { Button } from "antd";
+import "./App.css";
 
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,9 +37,9 @@ export default function App() {
   };
 
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "20px" }}>
+    <div className="max-w-[1024px] p-6" style={{ margin: "0 auto"}}>
       <h1>React Query Blog</h1>
-      <Button type="primary" onClick={() => setIsModalOpen(true)} style={{ marginBottom: 20 }}>
+      <Button type="primary" onClick={() => setIsModalOpen(true)} className="my-8">
         Create New Post
       </Button>
       <PostList

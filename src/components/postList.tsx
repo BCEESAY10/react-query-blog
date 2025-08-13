@@ -26,12 +26,12 @@ export default function PostList({onEdit}: Props) {
   return (
     <div>
       <h2>All Posts</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {data?.map((post) => (
           <div
             key={post.id}
-            className="rounded-lg"
-            style={{ border: "1px solid #ccc", margin: "8px", padding: "8px" }}>
+            className="rounded-lg my-4 border border-[#ccc] p-4"
+            >
             <h3 className="text-xl font-semibold">{post.title}</h3>
             <p>
               <b>Author:</b>{" "}
