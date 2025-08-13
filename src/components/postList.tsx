@@ -6,7 +6,7 @@ type Props = {
   onEdit: (post: Post) => void;
 };
 
-export default function PostList({onEdit}: Props) {
+export default function PostList({ onEdit }: Props) {
   const queryClient = useQueryClient();
   const { data, isLoading, isError } = useQuery<Post[]>({
     queryKey: ["posts"],
@@ -26,31 +26,29 @@ export default function PostList({onEdit}: Props) {
   return (
     <div>
       <h2>All Posts</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 md:gap-4">
         {data?.map((post) => (
           <div
             key={post.id}
-            className="rounded-lg my-4 border border-[#ccc] p-4"
-            >
+            className="rounded-lg my-4 border border-[#ccc] p-4">
             <h3 className="text-xl font-semibold">{post.title}</h3>
             <p>
               <b>Author:</b>{" "}
               <span className="text-blue-500">{post.username}</span>
             </p>
             <p>{post.content}</p>
-            <Button
-              type="primary"
-              style={{ marginRight: 8 }}
-              onClick={() => onEdit(post)}>
-              Edit
-            </Button>
-            <Popconfirm
-              title="Are you sure to delete this post?"
-              onConfirm={() => deleteMutation.mutate(post.id!)}
-              okText="Yes"
-              cancelText="No">
-              <Button danger>Delete</Button>
-            </Popconfirm>
+            <div className="mt-4 flex gap-4">
+              <Button type="primary" onClick={() => onEdit(post)}>
+                Edit
+              </Button>
+              <Popconfirm
+                title="Are you sure to delete this post?"
+                onConfirm={() => deleteMutation.mutate(post.id!)}
+                okText="Yes"
+                cancelText="No">
+                <Button danger>Delete</Button>
+              </Popconfirm>
+            </div>
           </div>
         ))}
       </div>
