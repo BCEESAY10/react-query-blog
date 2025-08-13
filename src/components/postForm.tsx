@@ -25,6 +25,7 @@ export default function PostForm({ visible, onCancel, onSubmit, initialValues }:
       open={visible}
       title={initialValues ? "Edit Post" : "Create Post"}
       okText={initialValues ? "Update" : "Create"}
+      afterClose={() => form.resetFields()}
       onCancel={onCancel}
       onOk={() => {
         form

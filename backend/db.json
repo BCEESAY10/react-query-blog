@@ -12,14 +12,14 @@
       "userId": 2,
       "username": "Bucar",
       "title": "My story",
-      "content": "I have something to share..."
+      "content": "I have something to share... Please read carefully."
     },
     {
       "id": "467c",
       "userId": 3,
       "username": "User",
       "title": "Bogus",
-      "content": "Hello this is my second bogus story"
+      "content": "Hello this is my second bogus story that has no content"
     }
   ]
 }
