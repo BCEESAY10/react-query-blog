@@ -1,10 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchPosts, type Post } from "../services/postService";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchPosts, deletePost, type Post } from "../services/postService";
+import { Button, Popconfirm } from "antd";
 
-export default function PostList() {
+type Props = {
+  onEdit: (post: Post) => void;
+};
+
+export default function PostList({onEdit}: Props) {
+  const queryClient = useQueryClient();
   const { data, isLoading, isError } = useQuery<Post[]>({
     queryKey: ["posts"],
     queryFn: fetchPosts,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deletePost,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
   });
 
   if (isLoading) return <p>Loading posts...</p>;
@@ -13,13 +26,32 @@ export default function PostList() {
   return (
     <div>
       <h2>All Posts</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3">
-            {data?.map((post) => (
-            <div key={post.id} className="rounded-lg" style={{ border: "1px solid #ccc", margin: "8px", padding: "8px" }}>
+      <div className="grid grid-cols-1 md:grid-cols-3">
+        {data?.map((post) => (
+          <div
+            key={post.id}
+            className="rounded-lg"
+            style={{ border: "1px solid #ccc", margin: "8px", padding: "8px" }}>
             <h3 className="text-xl font-semibold">{post.title}</h3>
-            <p><b>Author:</b> <span className="text-blue-500">{post.username}</span></p>
+            <p>
+              <b>Author:</b>{" "}
+              <span className="text-blue-500">{post.username}</span>
+            </p>
             <p>{post.content}</p>
-            </div>
+            <Button
+              type="primary"
+              style={{ marginRight: 8 }}
+              onClick={() => onEdit(post)}>
+              Edit
+            </Button>
+            <Popconfirm
+              title="Are you sure to delete this post?"
+              onConfirm={() => deleteMutation.mutate(post.id!)}
+              okText="Yes"
+              cancelText="No">
+              <Button danger>Delete</Button>
+            </Popconfirm>
+          </div>
         ))}
       </div>
     </div>

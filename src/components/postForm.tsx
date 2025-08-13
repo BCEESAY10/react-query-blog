@@ -1,62 +1,59 @@
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createPost, type Post} from "../services/postService";
+import { Modal, Form, Input, InputNumber } from "antd";
+import { useEffect } from "react";
+import { type Post } from "../services/postService";
 
-export default function PostForm() {
-  const queryClient = useQueryClient();
-  const [formData, setFormData] = useState<Post>({
-    userId: 0,
-    username: "",
-    title: "",
-    content: ""
-  });
+type Props = {
+  visible: boolean;
+  onCancel: () => void;
+  onSubmit: (values: Post) => void;
+  initialValues?: Post;
+};
 
-  const mutation = useMutation({
-    mutationFn: createPost,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-      setFormData({ userId: 0, username: "", title: "", content: "" });
+export default function PostForm({ visible, onCancel, onSubmit, initialValues }: Props) {
+  const [form] = Form.useForm<Post>();
+
+  useEffect(() => {
+    if (initialValues) {
+      form.setFieldsValue(initialValues);
+    } else {
+      form.resetFields();
     }
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.title || !formData.username || !formData.content) return;
-    mutation.mutate(formData);
-  };
+  }, [initialValues, form]);
 
   return (
-    <form onSubmit={handleSubmit} className="mb-6 grid gap-4 grid-cols-1 md:grid-cols-3 grid-rows-3">
-      <h2 className="row-start-1 text-xl">Create New Post</h2>
-      <input
-        className="px-4 py-3 md:row-start-2 md:col-start-1 outline-0 border border-blue-500 rounded-lg"
-        type="number"
-        value={formData.userId}
-        onChange={(e) => setFormData({ ...formData, userId: Number(e.target.value) })}
-      />
-      <input
-        className="px-4 py-3 md:row-start-2 md:col-start-2 outline-0 border border-blue-500 rounded-lg"
-        type="text"
-        placeholder="Username"
-        value={formData.username}
-        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-      />
-      <input
-        className="px-4 py-3 outline-0 md:row-start-2 md:col-start-3 border border-blue-500 rounded-lg"
-        type="text"
-        placeholder="Title"
-        value={formData.title}
-        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-      />
-      <textarea
-        className="px-4 outline-0 md:row-start-3 md:col-start-1 border border-blue-500 rounded-lg"
-        placeholder="Content"
-        value={formData.content}
-        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-      />
-      <button type="submit" disabled={mutation.isPending} className="bg-blue-500 md:row-start-3 md:col-start-2 text-white px-4 py-3 rounded-lg cursor-pointer">
-        {mutation.isPending ? "Adding..." : "Add Post"}
-      </button>
-    </form>
+    <Modal
+      open={visible}
+      title={initialValues ? "Edit Post" : "Create Post"}
+      okText={initialValues ? "Update" : "Create"}
+      onCancel={onCancel}
+      onOk={() => {
+        form
+          .validateFields()
+          .then((values) => {
+            onSubmit(values);
+          })
+          .catch((info) => {
+            console.log("Validation Failed:", info);
+          });
+      }}
+    >
+      <Form form={form} layout="vertical">
+        <Form.Item name="userId" label="User ID" rules={[{ required: true }]}>
+          <InputNumber style={{ width: "100%" }} />
+        </Form.Item>
+
+        <Form.Item name="username" label="Username" rules={[{ required: true }]}>
+          <Input />
+        </Form.Item>
+
+        <Form.Item name="title" label="Title" rules={[{ required: true }]}>
+          <Input />
+        </Form.Item>
+
+        <Form.Item name="content" label="Content" rules={[{ required: true }]}>
+          <Input.TextArea rows={5} />
+        </Form.Item>
+      </Form>
+    </Modal>
   );
 }
